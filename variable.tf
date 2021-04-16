@@ -32,3 +32,4 @@ variable "az_number" {
     f = 6
   }
 }
+

@@ -1,7 +1,7 @@
 #--main/root--
 
 data "aws_availability_zone" "dedicateaz" {
-  name = "us-west-2a"
+  name = "us-west-2b"
 }
 
 resource "aws_vpc" "dns_env" {
@@ -16,7 +16,7 @@ resource "aws_vpc" "dns_env" {
 
 resource "aws_subnet" "pub_dns" {
   vpc_id                  = aws_vpc.dns_env.id
-  cidr_block              = cidrsubnet(aws_vpc.dns_env.cidr_block, 1, var.az_number[data.aws_availability_zone.dedicateaz.name_suffix])
+  cidr_block              = cidrsubnet(aws_vpc.dns_env.cidr_block, 2, var.az_number[data.aws_availability_zone.dedicateaz.name_suffix])
   map_public_ip_on_launch = false
 
   tags = {
@@ -62,8 +62,8 @@ resource "aws_instance" "myweb" {
           yum -y update
           yum install -y httpd wget git
           cd /tmp
-          git clone https://github.com/acantril/aws-sa-associate-saac02.git 
-          cp ./aws-sa-associate-saac02/11-Route53/r53_zones_and_failover/01_a4lwebsite/* /var/www/html
+          git clone https://github.com/ValAug/AWS_Route53_Terraform.git
+          cp ./AWS_Route53_Terraform/mainweb/* /var/www/html
           usermod -a -G apache ec2-user   
           chown -R ec2-user:apache /var/www
           chmod 2775 /var/www
