@@ -63,7 +63,7 @@ resource "aws_instance" "myweb" {
           yum install -y httpd wget git
           cd /tmp
           git clone https://github.com/ValAug/AWS_Route53_Terraform.git
-          cp ./AWS_Route53_Terraform/mainweb/* /var/www/html
+          cp ./AWS_Route53_Terraform/mainweb/index.html /var/www/html
           usermod -a -G apache ec2-user   
           chown -R ec2-user:apache /var/www
           chmod 2775 /var/www
