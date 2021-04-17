@@ -5,7 +5,7 @@ data "aws_availability_zone" "dedicateaz" {
 }
 
 resource "aws_vpc" "dns_env" {
-  cidr_block           = cidrsubnet("10.0.0.0/20", 1, var.region_number[data.aws_availability_zone.dedicateaz.region])
+  cidr_block           = cidrsubnet("10.0.0.0/20", 2, var.region_number[data.aws_availability_zone.dedicateaz.region])
   enable_dns_hostnames = true
   enable_dns_support   = true
 
@@ -16,7 +16,7 @@ resource "aws_vpc" "dns_env" {
 
 resource "aws_subnet" "pub_dns" {
   vpc_id                  = aws_vpc.dns_env.id
-  cidr_block              = cidrsubnet(aws_vpc.dns_env.cidr_block, 1, var.az_number[data.aws_availability_zone.dedicateaz.name_suffix])
+  cidr_block              = cidrsubnet(aws_vpc.dns_env.cidr_block, 2, var.az_number[data.aws_availability_zone.dedicateaz.name_suffix])
   map_public_ip_on_launch = false
 
   tags = {
@@ -120,93 +120,93 @@ resource "aws_security_group" "web_sg" {
   }
 }
 
-resource "aws_s3_bucket" "webbucket" {
-  bucket = ""
-  acl    = "public-read"
-  website {
-    index_document = "index.html"
-  }
+# resource "aws_s3_bucket" "webbucket" {
+#   bucket = ""
+#   acl    = "public-read"
+#   website {
+#     index_document = "index.html"
+#   }
 
-  tags = {
-    Name = "stacticweb"
-  }
-}
+#   tags = {
+#     Name = "stacticweb"
+#   }
+# }
 
-resource "aws_s3_bucket_policy" "wbpolicy" {
-  bucket = aws_s3_bucket.webbucket.id
-  policy = jsonencode(
-    {
-      Version = "2012-10-17"
-      Id      = "Thisbucketpolicy"
-      Statement = [
-        {
-          Sid       = "PublicReadGetObject"
-          Effect    = "Allow"
-          Principal = "*"
-          Action    = ["s3:GetObject"]
-          Resource = [
-            "${aws_s3_bucket.webbucket.arn}/*"
-          ]
-        }
-      ]
-    }
-  )
-}
+# resource "aws_s3_bucket_policy" "wbpolicy" {
+#   bucket = aws_s3_bucket.webbucket.id
+#   policy = jsonencode(
+#     {
+#       Version = "2012-10-17"
+#       Id      = "Thisbucketpolicy"
+#       Statement = [
+#         {
+#           Sid       = "PublicReadGetObject"
+#           Effect    = "Allow"
+#           Principal = "*"
+#           Action    = ["s3:GetObject"]
+#           Resource = [
+#             "${aws_s3_bucket.webbucket.arn}/*"
+#           ]
+#         }
+#       ]
+#     }
+#   )
+# }
 
-resource "aws_s3_bucket_object" "object" {
-  bucket       = aws_s3_bucket.webbucket.id
-  key          = "index.html"
-  source       = ""
-  content_type = "text/html"
-}
+# resource "aws_s3_bucket_object" "object" {
+#   bucket       = aws_s3_bucket.webbucket.id
+#   key          = "index.html"
+#   source       = ""
+#   content_type = "text/html"
+# }
 
-data "aws_route53_zone" "my_zone" {
-    name = var.name
-    zone_id = var.zone_id
+# data "aws_route53_zone" "my_zone" {
+#     name = var.name
+#     zone_id = var.zone_id
 
-}
+# }
 
-resource "aws_route53_health_check" "dnshcheck" {
-  fqdn              = ""
-  port              = 80
-  type              = "HTTP"
-  resource_path     = "/index.html"
-  failure_threshold = "3"
-  request_interval  = "10"
-  ip_address = aws_eip.webeip.public_ip
+# resource "aws_route53_health_check" "dnshcheck" {
+#   fqdn              = ""
+#   port              = 80
+#   type              = "HTTP"
+#   resource_path     = "/index.html"
+#   failure_threshold = "3"
+#   request_interval  = "10"
+#   ip_address = aws_eip.webeip.public_ip
 
-  tags = {
-    Name = "primary-health-check"
-  }
-}
+#   tags = {
+#     Name = "primary-health-check"
+#   }
+# }
 
-resource "aws_route53_record" "ec2" {
-  zone_id = data.aws_route53_zone.my_zone.zone_id
-  name    = "www.${data.aws_route53_zone.my_zone.name}"
-  type    = "A"
-  ttl     = "60"
-  health_check_id = aws_route53_health_check.dnshcheck.id
-  records = [aws_eip.webeip.public_ip]
-  set_identifier = "ec2"
+# resource "aws_route53_record" "ec2" {
+#   zone_id = data.aws_route53_zone.my_zone.zone_id
+#   name    = "www.${data.aws_route53_zone.my_zone.name}"
+#   type    = "A"
+#   ttl     = "60"
+#   health_check_id = aws_route53_health_check.dnshcheck.id
+#   records = [aws_eip.webeip.public_ip]
+#   set_identifier = "ec2"
 
-  failover_routing_policy {
-    type = "PRIMARY"
-  }
-}
+#   failover_routing_policy {
+#     type = "PRIMARY"
+#   }
+# }
 
-resource "aws_route53_record" "s3" {
-  zone_id = data.aws_route53_zone.my_zone.zone_id
-  name = "www.${data.aws_route53_zone.my_zone.name}"
-  type = "A"
-  set_identifier = "s3"
+# resource "aws_route53_record" "s3" {
+#   zone_id = data.aws_route53_zone.my_zone.zone_id
+#   name = "www.${data.aws_route53_zone.my_zone.name}"
+#   type = "A"
+#   set_identifier = "s3"
 
-  alias {
-    name = aws_s3_bucket.webbucket.website_domain
-    zone_id = aws_s3_bucket.webbucket.hosted_zone_id
-    evaluate_target_health = true
-  }
+#   alias {
+#     name = aws_s3_bucket.webbucket.website_domain
+#     zone_id = aws_s3_bucket.webbucket.hosted_zone_id
+#     evaluate_target_health = true
+#   }
 
-  failover_routing_policy {
-    type = "SECONDARY"
-  }
-}
+#   failover_routing_policy {
+#     type = "SECONDARY"
+#   }
+# }
