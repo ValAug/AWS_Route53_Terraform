@@ -1,7 +1,7 @@
 #--main/root--
 
 data "aws_availability_zone" "dedicateaz" {
-  name = "us-west-2b"
+  name = "us-west-2a"
 }
 
 resource "aws_vpc" "dns_env" {
@@ -16,7 +16,7 @@ resource "aws_vpc" "dns_env" {
 
 resource "aws_subnet" "pub_dns" {
   vpc_id                  = aws_vpc.dns_env.id
-  cidr_block              = cidrsubnet(aws_vpc.dns_env.cidr_block, 2, var.az_number[data.aws_availability_zone.dedicateaz.name_suffix])
+  cidr_block              = cidrsubnet(aws_vpc.dns_env.cidr_block, 1, var.az_number[data.aws_availability_zone.dedicateaz.name_suffix])
   map_public_ip_on_launch = false
 
   tags = {
