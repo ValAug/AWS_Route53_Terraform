@@ -121,7 +121,7 @@ resource "aws_security_group" "web_sg" {
 }
 
 resource "aws_s3_bucket" "webbucket" {
-  bucket = "www.augustovaldivia.ca"
+  bucket = ""
   acl    = "public-read"
   website {
     index_document = "index.html"
@@ -156,7 +156,7 @@ resource "aws_s3_bucket_policy" "wbpolicy" {
 resource "aws_s3_bucket_object" "object" {
   bucket       = aws_s3_bucket.webbucket.id
   key          = "index.html"
-  source       = "/Users/katherinekruk/Desktop/Terraform/r53_tf/AWS_Route53_Terraform/s3file/index.html"
+  source       = ""
   content_type = "text/html"
 }
 
@@ -167,7 +167,7 @@ data "aws_route53_zone" "my_zone" {
 }
 
 resource "aws_route53_health_check" "dnshcheck" {
-  fqdn              = "www.augustovaldiva.ca"
+  fqdn              = ""
   port              = 80
   type              = "HTTP"
   resource_path     = "/index.html"

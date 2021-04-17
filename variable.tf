@@ -7,7 +7,7 @@ variable "zone_id" {
 
 variable "name" {
   type    = string
-  default = "augustovaldivia.ca"
+  default = ""
 }
 
 variable "region_number" {
