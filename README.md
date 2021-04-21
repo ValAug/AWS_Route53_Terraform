@@ -12,7 +12,7 @@
 ![Terraform](https://img.shields.io/badge/-Terraform-000000?style=flat&logo=Terraform)
 
 # AWS EC2s-AMIs diagram 
-![alt text](https://github.com/ValAug/aws-compu-terraform/blob/main/ec2_d.png)
+![alt text](https://github.com/ValAug/AWS_Route53_Terraform/blob/main/53d.png)
 
 
 # Purpose
