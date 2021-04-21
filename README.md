@@ -52,7 +52,7 @@ Shows how to use AWS with Terraform to accomplish the following tasks:
 It will deploy to the account setup for the aws cli called 'default'
 
 ```bash
-cd aws-compu-terraform
+cd AWS_Route53_Terraform
 terraform init
 terraform validate
 terraform apply --auto-approve
