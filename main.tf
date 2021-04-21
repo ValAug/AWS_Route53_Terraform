@@ -165,13 +165,6 @@ resource "aws_s3_bucket_object" "object" {
 }
 
 
-# resource "aws_s3_bucket_object" "object" {
-#   bucket       = aws_s3_bucket.webbucket.id
-#   key          = "index.html"
-#   source       = ""
-#   content_type = "text/html"
-# # }
-
 data "aws_route53_zone" "my_zone" {
     name = var.name
 
