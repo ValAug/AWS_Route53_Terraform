@@ -7,11 +7,11 @@ variable "zone_id" {
 
 variable "name" {
   type    = string
-  default = "augustovaldivia.ca"
+  default = "pulsocreativo.org"
 }
 
 variable "region_number" {
-    default = {
+  default = {
     us-west-2 = 1
     us-west-1 = 2
     us-east-1 = 3
@@ -20,7 +20,7 @@ variable "region_number" {
 }
 
 variable "az_number" {
-    default = {
+  default = {
     a = 1
     b = 2
     c = 3
