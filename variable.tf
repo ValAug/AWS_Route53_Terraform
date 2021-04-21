@@ -7,7 +7,7 @@ variable "zone_id" {
 
 variable "name" {
   type    = string
-  default = "pulsocreativo.org"
+  default = ""
 }
 
 variable "region_number" {

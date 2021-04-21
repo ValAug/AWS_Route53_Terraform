@@ -154,10 +154,10 @@ resource "aws_s3_bucket_policy" "wbpolicy" {
 }
 
 resource "aws_s3_bucket_object" "object" {
-  for_each = fileset("/Users/katherinekruk/Desktop/Terraform/r53_tf/AWS_Route53_Terraform/s3file/", "*")
+  for_each = fileset("s3file/", "*")
   bucket   = aws_s3_bucket.webbucket.id
   key      = each.value
-  source   = "/Users/katherinekruk/Desktop/Terraform/r53_tf/AWS_Route53_Terraform/s3file/${each.value}"
+  source   = "s3file/${each.value}"
   content_type = each.value
   
   
