@@ -55,6 +55,7 @@ resource "aws_instance" "myweb" {
   associate_public_ip_address = true
   vpc_security_group_ids      = [aws_security_group.web_sg.id]
   depends_on                  = [aws_internet_gateway.webig]
+  
 
 
   user_data = <<-EOF
@@ -121,7 +122,7 @@ resource "aws_security_group" "web_sg" {
 }
 
 resource "aws_s3_bucket" "webbucket" {
-  bucket = "www.pulsocreativo.org"
+  bucket = ""
   acl    = "public-read"
   website {
     index_document = "index.html"
